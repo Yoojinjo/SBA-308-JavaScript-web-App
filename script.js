@@ -1,5 +1,6 @@
 import * as Gallery from "./gallery.js";
 import { clear } from "./clear.js";
+import * as Colors from "./color-change.js";
 
 //https://cat-fact.herokuapp.com
 
@@ -120,6 +121,8 @@ function updateProgress(progressEvent) {
 // get cat facts
 const catFacts = document.getElementById("catFacts");
 catFacts.addEventListener("click", newCat);
+catFacts.addEventListener("mouseover", Colors.startColorCycle);
+catFacts.addEventListener("mouseout", Colors.stopColorCycle);
 
 function newCat() {
 	header.style.display = "none";
@@ -162,7 +165,7 @@ const button4 = document.getElementById("button4");
 button1.addEventListener("click", Gallery.one);
 button2.addEventListener("click", Gallery.two);
 button4.addEventListener("click", Gallery.four);
-var columns = document.getElementsByClassName("column");
+// var columns = document.getElementsByClassName("column");
 
 // Add active class to the current button (highlight it)
 
