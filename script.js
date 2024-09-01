@@ -20,9 +20,13 @@ newGallery.addEventListener("click", initialLoad);
 const favCats = document.getElementById("favCats");
 favCats.addEventListener("click", getFavorites);
 
+const myheader = document.querySelector("h2");
+
 // get favorites
 async function getFavorites() {
 	clear();
+	myheader.textContent = "Favorite Feline Photos";
+	myheader.style.backgroundColor = "pink";
 	axios
 		.get("https://api.thecatapi.com/v1/favourites")
 		.then((result) => {
@@ -90,6 +94,8 @@ async function initialLoad() {
 			const columns = document.querySelectorAll(".column");
 			const numColumns = columns.length;
 
+			myheader.textContent = "Cat Image Gallery";
+			myheader.style.backgroundColor = "lightblue";
 			cats20.forEach((element, index) => {
 				const imgElement = document.createElement("img");
 				imgElement.src = element.url;
