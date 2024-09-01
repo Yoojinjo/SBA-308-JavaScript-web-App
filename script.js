@@ -1,4 +1,5 @@
 import * as Gallery from "./gallery.js";
+import { clear } from "./clear.js";
 
 //https://cat-fact.herokuapp.com
 
@@ -13,7 +14,7 @@ var header = document.getElementById("myHeader");
 var btns = header.getElementsByClassName("btn");
 initialLoad();
 const newGallery = document.getElementById("gallery");
-newGallery.addEventListener("click", Gallery.clear);
+newGallery.addEventListener("click", clear);
 newGallery.addEventListener("click", initialLoad);
 
 async function initialLoad() {
@@ -68,7 +69,7 @@ async function initialLoad() {
 				const columnIndex = index % numColumns;
 				columns[columnIndex].appendChild(imgElement);
 				header.style.display = "block";
-				two();
+				Gallery.two();
 			});
 		})
 		.catch((error) => console.error(error));
@@ -87,7 +88,7 @@ catFacts.addEventListener("click", newCat);
 
 function newCat() {
 	header.style.display = "none";
-	Gallery.clear();
+	clear();
 	catInfo();
 }
 
@@ -123,31 +124,10 @@ async function catInfo() {
 const button1 = document.getElementById("button1");
 const button2 = document.getElementById("button2");
 const button4 = document.getElementById("button4");
-button1.addEventListener("click", one);
-button2.addEventListener("click", two);
-button4.addEventListener("click", four);
+button1.addEventListener("click", Gallery.one);
+button2.addEventListener("click", Gallery.two);
+button4.addEventListener("click", Gallery.four);
 var columns = document.getElementsByClassName("column");
-
-// Full-width images
-function one() {
-	for (let i = 0; i < columns.length; i++) {
-		columns[i].style.flex = "100%";
-	}
-}
-
-// Two images side by side
-function two() {
-	for (let i = 0; i < columns.length; i++) {
-		columns[i].style.flex = "49%";
-	}
-}
-
-// Four images side by side
-function four() {
-	for (let i = 0; i < columns.length; i++) {
-		columns[i].style.flex = "24%";
-	}
-}
 
 // Add active class to the current button (highlight it)
 
