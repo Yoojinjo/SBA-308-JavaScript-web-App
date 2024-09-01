@@ -9,7 +9,8 @@ const API_KEY =
 // header parameter
 axios.defaults.headers.common["x-api-key"] = API_KEY;
 let cats20 = [];
-
+var header = document.getElementById("myHeader");
+var btns = header.getElementsByClassName("btn");
 initialLoad();
 const newGallery = document.getElementById("gallery");
 newGallery.addEventListener("click", Gallery.clear);
@@ -66,6 +67,7 @@ async function initialLoad() {
 				// Calculate which column the image should go into
 				const columnIndex = index % numColumns;
 				columns[columnIndex].appendChild(imgElement);
+				header.style.display = "block";
 				two();
 			});
 		})
@@ -78,6 +80,28 @@ function updateProgress(progressEvent) {
 	var percentage = (current / total) * 100;
 	progressBar.style.width = percentage + "%";
 }
+
+// get cat facts
+const catFacts = document.getElementById("catFacts");
+catFacts.addEventListener("click", newCat);
+
+function newCat() {
+	header.style.display = "none";
+	Gallery.clear();
+	catInfo();
+}
+
+async function catInfo() {
+	axios
+		.get("https://api.thecatapi.com/v1/images/search", {
+			onDownloadProgress: updateProgress,
+		})
+		.then((result) => {
+			let catData = result.data;
+			console.log(catData);
+		});
+}
+
 const button1 = document.getElementById("button1");
 const button2 = document.getElementById("button2");
 const button4 = document.getElementById("button4");
@@ -108,8 +132,7 @@ function four() {
 }
 
 // Add active class to the current button (highlight it)
-var header = document.getElementById("myHeader");
-var btns = header.getElementsByClassName("btn");
+
 for (let i = 0; i < btns.length; i++) {
 	btns[i].addEventListener("click", function () {
 		var current = document.getElementsByClassName("active");
