@@ -11,6 +11,10 @@ axios.defaults.headers.common["x-api-key"] = API_KEY;
 let cats20 = [];
 
 initialLoad();
+const newGallery = document.getElementById("gallery");
+newGallery.addEventListener("click", Gallery.clear);
+newGallery.addEventListener("click", initialLoad);
+
 async function initialLoad() {
 	axios.interceptors.request.use((request) => {
 		console.log("Request Started.");
