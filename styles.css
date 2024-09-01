@@ -128,3 +128,26 @@ body {
 .column img {
 	width: 100%;
 }
+#randomCatPic img {
+	width: 100%;
+}
+
+#randomCatFacts {
+	display: flex;
+	text-align: start;
+	font-size: larger;
+	font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+	width: 100%;
+}
+
+#randomCatPic,
+#randomCatInfo {
+	width: 50%;
+}
+
+#catName {
+	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+		"Lucida Sans", Arial, sans-serif;
+	font-size: xx-large;
+	font-weight: 900;
+}

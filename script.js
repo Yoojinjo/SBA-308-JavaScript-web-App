@@ -93,13 +93,31 @@ function newCat() {
 
 async function catInfo() {
 	axios
-		.get("https://api.thecatapi.com/v1/images/search", {
+		.get("https://api.thecatapi.com/v1/images/search?has_breeds=1", {
 			onDownloadProgress: updateProgress,
 		})
 		.then((result) => {
-			let catData = result.data;
+			let catData = result.data[0];
 			console.log(catData);
-		});
+			let catName = document.getElementById("catName");
+			catName.innerHTML = "";
+			catName.style.marginTop = "3%";
+			catName.append(`${catData.breeds[0].name}`);
+			let randomCatFacts = document.getElementById("randomCatFacts");
+			let randomCatPic = document.getElementById("randomCatPic");
+			randomCatPic.innerHTML = "";
+			randomCatPic.style.padding = "3%";
+			let catPic = document.createElement("img");
+			catPic.src = catData.url;
+			randomCatPic.appendChild(catPic);
+			let randomCatInfo = document.getElementById("randomCatInfo");
+			randomCatInfo.innerHTML = "";
+			randomCatInfo.style.padding = "3%";
+			randomCatInfo.innerHTML = `<b>Description:</b> ${catData.breeds[0].description} <br><br>
+            <b>Temperament:</b> ${catData.breeds[0].temperament} <br><br>
+            <b>Also known as:</b> ${catData.breeds[0].alt_names} <br>`;
+		})
+		.catch((error) => console.error(error));
 }
 
 const button1 = document.getElementById("button1");
