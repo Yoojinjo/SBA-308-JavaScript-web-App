@@ -12,12 +12,41 @@ axios.defaults.headers.common["x-api-key"] = API_KEY;
 let cats20 = [];
 var header = document.getElementById("myHeader");
 var btns = header.getElementsByClassName("btn");
+
 initialLoad();
+
 const newGallery = document.getElementById("gallery");
-newGallery.addEventListener("click", clear);
 newGallery.addEventListener("click", initialLoad);
+const favCats = document.getElementById("favCats");
+favCats.addEventListener("click", getFavorites);
+
+// get favorites
+async function getFavorites() {
+	clear();
+	axios
+		.get("https://api.thecatapi.com/v1/favourites")
+		.then((result) => {
+			let fav = result.data;
+			console.log(fav);
+			const columns = document.querySelectorAll(".column");
+			const numColumns = columns.length;
+
+			fav.forEach((element, index) => {
+				const favCatPic = document.createElement("img");
+				favCatPic.src = element.image.url;
+
+				// Calculate which column the image should go into
+				const columnIndex = index % numColumns;
+				columns[columnIndex].appendChild(favCatPic);
+				header.style.display = "block";
+				Gallery.two();
+			});
+		})
+		.catch((error) => console.error(error));
+}
 
 async function initialLoad() {
+	clear();
 	axios.interceptors.request.use((request) => {
 		console.log("Request Started.");
 		progressBar.style.width = "0%";
