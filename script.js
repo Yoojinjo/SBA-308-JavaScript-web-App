@@ -1,6 +1,5 @@
-import axios from "axios";
+import * as Gallery from "./gallery.js";
 
-// base url for cats facts
 //https://cat-fact.herokuapp.com
 
 //API Key for https://api.thecatapi.com/
@@ -8,8 +7,10 @@ const API_KEY =
 	"live_YFnrorgiYYm2zDAXebd9fRmy5IBUjsjBsCUkdB1uFfPAxI2slUx346TGwLyziik8";
 
 // header parameter
-// { 'x-api-key' : 'API_KEY' }
+axios.defaults.headers.common["x-api-key"] = API_KEY;
+let cats20 = [];
 
+initialLoad();
 async function initialLoad() {
 	axios.interceptors.request.use((request) => {
 		console.log("Request Started.");
@@ -43,14 +44,46 @@ async function initialLoad() {
 			throw error;
 		}
 	);
-
+	// get 20 random images
 	axios
-		.get(
-			"https://api.thecatapi.com/v1/images/search?limit=10&has_breeds=1&api_key=API_KEY",
-			{ onDownloadProgress: updateProgress }
-		)
+		.get("https://api.thecatapi.com/v1/images/search?limit=20", {
+			onDownloadProgress: updateProgress,
+		})
 		.then((result) => {
-			console.log(result);
+			cats20 = result.data;
+			console.log(cats20);
+			const columns = document.querySelectorAll(".column");
+			const numColumns = columns.length;
+
+			cats20.forEach((element, index) => {
+				const imgElement = document.createElement("img");
+				imgElement.src = element.url;
+
+				// Calculate which column the image should go into
+				const columnIndex = index % numColumns;
+				columns[columnIndex].appendChild(imgElement);
+			});
 		})
 		.catch((error) => console.error(error));
+}
+function updateProgress(progressEvent) {
+	console.log(progressEvent);
+	var total = progressEvent.total;
+	var current = progressEvent.loaded;
+	var percentage = (current / total) * 100;
+	progressBar.style.width = percentage + "%";
+}
+let one = Gallery.one();
+let two = Gallery.two();
+let four = Gallery.four();
+
+// Add active class to the current button (highlight it)
+var header = document.getElementById("myHeader");
+var btns = header.getElementsByClassName("btn");
+for (let i = 0; i < btns.length; i++) {
+	btns[i].addEventListener("click", function () {
+		var current = document.getElementsByClassName("active");
+		current[0].className = current[0].className.replace(" active", "");
+		this.className += " active";
+	});
 }
