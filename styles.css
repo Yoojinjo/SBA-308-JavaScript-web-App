@@ -21,6 +21,11 @@ body {
 	border-bottom: 1px solid black;
 }
 
+#branding img {
+	width: 300px;
+	height: 200px;
+}
+
 /* NAVBAR */
 .navbar a {
 	/* float: left; */
@@ -82,7 +87,7 @@ body {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-	background-color: #rgb(194, 197, 2);
+	background-color: rgb(194, 197, 2);
 }
 /* image gallery header */
 .header {
