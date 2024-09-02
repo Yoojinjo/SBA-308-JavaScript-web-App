@@ -84,7 +84,11 @@ async function initialLoad() {
 			throw error;
 		}
 	);
-	// get 20 random images
+
+	loadImages();
+}
+// get 20 random images
+async function loadImages() {
 	axios
 		.get("https://api.thecatapi.com/v1/images/search?limit=20", {
 			onDownloadProgress: updateProgress,
@@ -99,6 +103,7 @@ async function initialLoad() {
 			myheader.style.backgroundColor = "lightblue";
 			cats20.forEach((element, index) => {
 				const imgElement = document.createElement("img");
+				imgElement.loading = "lazy";
 				imgElement.src = element.url;
 
 				// Calculate which column the image should go into
@@ -110,6 +115,7 @@ async function initialLoad() {
 		})
 		.catch((error) => console.error(error));
 }
+
 function updateProgress(progressEvent) {
 	console.log(progressEvent);
 	var total = progressEvent.total;
