@@ -50,10 +50,10 @@ async function getFavoriteCatPhotos() {
 			imgElement.src = element.image.url;
 			let imgId = element.image_id;
 			const heartIcon = document.createElement("div");
-			heartIcon;
 			heartIcon.className = "overlay";
+			heartIcon.classList.add("favorite");
 			heartIcon.src = "./catHeart.png";
-			heartIcon.onclick = () => addtoFav(imgId);
+			heartIcon.onclick = () => addtoFav(imgId, heartIcon);
 			// Calculate which column the image should go into
 			const columnIndex = index % numColumns;
 			columns[columnIndex].appendChild(imgContainer);
@@ -137,10 +137,10 @@ async function loadImages() {
 			imgElement.src = element.url;
 			let imgId = element.id;
 			const heartIcon = document.createElement("div");
-			heartIcon;
+
 			heartIcon.className = "overlay";
-			heartIcon.src = "./catHeart.png";
-			heartIcon.onclick = () => addtoFav(imgId);
+			// heartIcon.src = "./catHeart.png";
+			heartIcon.onclick = () => addtoFav(imgId, heartIcon);
 			// Calculate which column the image should go into
 			const columnIndex = index % numColumns;
 			columns[columnIndex].appendChild(imgContainer);
@@ -154,7 +154,7 @@ async function loadImages() {
 	}
 }
 
-async function addtoFav(imgId) {
+async function addtoFav(imgId, heartIcon) {
 	try {
 		const favResponse = await axios.get(
 			"https://api.thecatapi.com/v1/favourites"
@@ -168,7 +168,7 @@ async function addtoFav(imgId) {
 			console.log("Image is already in favorites. Favorite ID:", fav.id);
 
 			let favId = fav.id;
-			removeFromFav(favId);
+			removeFromFav(favId, heartIcon);
 			return;
 		}
 
@@ -179,16 +179,17 @@ async function addtoFav(imgId) {
 			sub_id: API_KEY,
 		});
 		console.log("image was added to favorites");
+		heartIcon.classList.add("favorite");
 	} catch (error) {
 		console.error(error);
 	}
 }
 //Remove from Fav
-async function removeFromFav(favId) {
+async function removeFromFav(favId, heartIcon) {
 	try {
 		await axios.delete(`https://api.thecatapi.com/v1/favourites/${favId}`);
 		console.log("image was removed from favorites");
-
+		heartIcon.classList.remove("favorite");
 		await getFavList();
 	} catch (error) {
 		console.error(error);
