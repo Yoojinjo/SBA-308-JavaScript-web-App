@@ -1,8 +1,7 @@
 import * as Gallery from "./gallery.js";
 import { clear } from "./clear.js";
 import * as Colors from "./color-change.js";
-var favInfo;
-let imgId;
+
 //https://cat-fact.herokuapp.com
 
 //API Key for https://api.thecatapi.com/
@@ -16,7 +15,7 @@ var header = document.getElementById("myHeader");
 var btns = header.getElementsByClassName("btn");
 
 // random cat fact
-async function randomCatFact(params) {
+async function randomCatFact() {
 	axios.get("https://catfact.ninja/fact?max_length=140");
 }
 // getFavList();
@@ -45,15 +44,15 @@ async function getFavoriteCatPhotos() {
 		const numColumns = columns.length;
 
 		favInfo.forEach((element, index) => {
-			const favCatPic = document.createElement("img");
-			favCatPic.src = element.image.url;
-			favCatPic.id = element.id;
-			let favCatPicId = element.id;
-			favCatPic.onclick = () => removeFromFav(favCatPicId);
-			favCatPic.favorite = true;
+			const imgElement = document.createElement("img");
+			imgElement.src = element.image.url;
+			imgElement.id = element.id;
+			let imgId = element.image_id;
+			imgElement.onclick = () => addtoFav(imgId);
+
 			// Calculate which column the image should go into
 			const columnIndex = index % numColumns;
-			columns[columnIndex].appendChild(favCatPic);
+			columns[columnIndex].appendChild(imgElement);
 			header.style.display = "block";
 			Gallery.two();
 		});
