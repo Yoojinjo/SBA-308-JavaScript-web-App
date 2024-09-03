@@ -15,6 +15,11 @@ let cats20 = [];
 var header = document.getElementById("myHeader");
 var btns = header.getElementsByClassName("btn");
 
+// random cat fact
+async function randomCatFact(params) {
+	axios.get("https://catfact.ninja/fact?max_length=140");
+}
+// getFavList();
 initialLoad();
 
 const newGallery = document.getElementById("gallery");
@@ -24,44 +29,52 @@ favCats.addEventListener("click", getFavoriteCatPhotos);
 
 const myheader = document.querySelector("h2");
 
-// get favorites
+// load favorites
 async function getFavoriteCatPhotos() {
 	clear();
 	myheader.textContent = "Favorite Feline Photos";
 	myheader.style.backgroundColor = "pink";
-	axios
-		.get("https://api.thecatapi.com/v1/favourites?limit=50")
-		.then((result) => {
-			favInfo = result.data;
-			// console.log(fav);
-			const columns = document.querySelectorAll(".column");
-			const numColumns = columns.length;
+	try {
+		const result = await axios.get(
+			"https://api.thecatapi.com/v1/favourites?limit=50"
+		);
+		const favInfo = result.data;
+		console.log(favInfo);
 
-			favInfo.forEach((element, index) => {
-				const favCatPic = document.createElement("img");
-				favCatPic.src = element.image.url;
-				favCatPic.id = element.id;
-				let favCatPicId = element.id;
-				favCatPic.onclick = () => removeFromFav(favCatPicId);
-				favCatPic.favorite = true;
-				// Calculate which column the image should go into
-				const columnIndex = index % numColumns;
-				columns[columnIndex].appendChild(favCatPic);
-				header.style.display = "block";
-				Gallery.two();
-			});
-		})
-		.catch((error) => console.error(error));
+		const columns = document.querySelectorAll(".column");
+		const numColumns = columns.length;
+
+		favInfo.forEach((element, index) => {
+			const favCatPic = document.createElement("img");
+			favCatPic.src = element.image.url;
+			favCatPic.id = element.id;
+			let favCatPicId = element.id;
+			favCatPic.onclick = () => removeFromFav(favCatPicId);
+			favCatPic.favorite = true;
+			// Calculate which column the image should go into
+			const columnIndex = index % numColumns;
+			columns[columnIndex].appendChild(favCatPic);
+			header.style.display = "block";
+			Gallery.two();
+		});
+	} catch (error) {
+		console.error(error);
+	}
 }
 
-//Remove from Fav
-async function removeFromFav(favCatPicId) {
-	axios
-		.delete(`https://api.thecatapi.com/v1/favourites/${favCatPicId}`)
-		.catch((error) => console.error(error));
-	// favCatPic.class = "favoritedFalse";
-	console.log("image was removed from favorites");
+//Refresh favorites
+async function getFavList() {
+	try {
+		const result = await axios.get(
+			"https://api.thecatapi.com/v1/favourites"
+		);
+		console.log(result.data);
+		return result.data;
+	} catch (error) {
+		console.error("Error fetching favorite list:", error);
+	}
 }
+
 async function initialLoad() {
 	clear();
 	axios.interceptors.request.use((request) => {
@@ -101,48 +114,74 @@ async function initialLoad() {
 }
 // get 20 random images
 async function loadImages() {
-	axios
-		.get("https://api.thecatapi.com/v1/images/search?limit=20", {
-			onDownloadProgress: updateProgress,
-		})
-		.then((result) => {
-			cats20 = result.data;
-			console.log(cats20);
-			const columns = document.querySelectorAll(".column");
-			const numColumns = columns.length;
+	try {
+		const response = await axios.get(
+			"https://api.thecatapi.com/v1/images/search?limit=20",
+			{
+				onDownloadProgress: updateProgress,
+			}
+		);
+		cats20 = response.data;
+		console.log(cats20);
+		const columns = document.querySelectorAll(".column");
+		const numColumns = columns.length;
 
-			myheader.textContent = "Cat Image Gallery";
-			myheader.style.backgroundColor = "lightblue";
-			cats20.forEach((element, index) => {
-				const imgElement = document.createElement("img");
-				imgElement.loading = "lazy";
-				imgElement.src = element.url;
-				imgElement.id = element.id;
-				let imgId = element.id;
-				imgElement.className = "favoritedFalse";
-				imgElement.onclick = () => addtoFav(imgId, imgElement);
-
-				// Calculate which column the image should go into
-				const columnIndex = index % numColumns;
-				columns[columnIndex].appendChild(imgElement);
-				header.style.display = "block";
-				Gallery.two();
-			});
-		})
-		.catch((error) => console.error(error));
+		cats20.forEach((element, index) => {
+			const imgElement = document.createElement("img");
+			imgElement.src = element.url;
+			let imgId = element.id;
+			imgElement.onclick = () => addtoFav(imgId);
+			// Calculate which column the image should go into
+			const columnIndex = index % numColumns;
+			columns[columnIndex].appendChild(imgElement);
+		});
+		header.style.display = "block";
+		Gallery.two();
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 async function addtoFav(imgId) {
-	axios
-		.post("https://api.thecatapi.com/v1/favourites", {
+	try {
+		const favResponse = await axios.get(
+			"https://api.thecatapi.com/v1/favourites"
+		);
+		const favoriteList = favResponse.data;
+		console.log(favoriteList);
+		// Check if the image is a favorite
+		const fav = favoriteList.find((fav) => fav.image_id === imgId);
+
+		if (fav) {
+			console.log("Image is already in favorites. Favorite ID:", fav.id);
+
+			let favId = fav.id;
+			removeFromFav(favId);
+			return;
+		}
+
+		console.log(imgId);
+
+		await axios.post("https://api.thecatapi.com/v1/favourites", {
 			image_id: imgId,
 			sub_id: API_KEY,
-		})
-		.catch((error) => console.error(error));
-
-	console.log("image was added from favorites");
+		});
+		console.log("image was added to favorites");
+	} catch (error) {
+		console.error(error);
+	}
 }
+//Remove from Fav
+async function removeFromFav(favId) {
+	try {
+		await axios.delete(`https://api.thecatapi.com/v1/favourites/${favId}`);
+		console.log("image was removed from favorites");
 
+		await getFavList();
+	} catch (error) {
+		console.error(error);
+	}
+}
 function updateProgress(progressEvent) {
 	// console.log(progressEvent);
 	var total = progressEvent.total;
@@ -208,27 +247,4 @@ for (let i = 0; i < btns.length; i++) {
 		current[0].className = current[0].className.replace(" active", "");
 		this.className += " active";
 	});
-}
-
-async function favorite() {
-	// check to see if img is in fav list
-	axios
-		.get("https://api.thecatapi.com/v1/favourites?limit=50")
-		.then((result) => {
-			favInfo = result.data;
-			console.log(favInfo);
-		})
-		.catch((error) => console.error(error));
-
-	// Deleting Favourites
-	// for (let i = 0; i < favInfo.length; i++) {
-	// 	if (imgId === favInfo[i].image_id) {
-	// 		axios
-	// 			.delete(
-	// 				`https://api.thecatapi.com/v1/favourites/${favInfo[i].id}`
-	// 			)
-	// 			.catch((error) => console.error(error));
-	// 		getFavoriteCatPhotos();
-	// 	}
-	// else {}
 }

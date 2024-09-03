@@ -158,3 +158,13 @@ body {
 	font-size: xx-large;
 	font-weight: 900;
 }
+.heart-icon {
+	position: absolute;
+	top: 1%;
+	right: 1%;
+	width: 24px;
+	height: 24px;
+	background-image: url(./catHeart.jpg);
+	background-size: cover;
+	display: none;
+}
