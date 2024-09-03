@@ -42,18 +42,23 @@ async function getFavoriteCatPhotos() {
 
 		const columns = document.querySelectorAll(".column");
 		const numColumns = columns.length;
-
+		// create images and add to gallery
 		favInfo.forEach((element, index) => {
+			const imgContainer = document.createElement("div");
+			imgContainer.className = "container";
 			const imgElement = document.createElement("img");
 			imgElement.src = element.image.url;
-			imgElement.id = element.id;
 			let imgId = element.image_id;
-			imgElement.onclick = () => addtoFav(imgId);
-
+			const heartIcon = document.createElement("div");
+			heartIcon;
+			heartIcon.className = "overlay";
+			heartIcon.src = "./catHeart.png";
+			heartIcon.onclick = () => addtoFav(imgId);
 			// Calculate which column the image should go into
 			const columnIndex = index % numColumns;
-			columns[columnIndex].appendChild(imgElement);
-			header.style.display = "block";
+			columns[columnIndex].appendChild(imgContainer);
+			imgContainer.appendChild(imgElement);
+			imgContainer.appendChild(heartIcon);
 			Gallery.two();
 		});
 	} catch (error) {
@@ -126,13 +131,21 @@ async function loadImages() {
 		const numColumns = columns.length;
 
 		cats20.forEach((element, index) => {
+			const imgContainer = document.createElement("div");
+			imgContainer.className = "container";
 			const imgElement = document.createElement("img");
 			imgElement.src = element.url;
 			let imgId = element.id;
-			imgElement.onclick = () => addtoFav(imgId);
+			const heartIcon = document.createElement("div");
+			heartIcon;
+			heartIcon.className = "overlay";
+			heartIcon.src = "./catHeart.png";
+			heartIcon.onclick = () => addtoFav(imgId);
 			// Calculate which column the image should go into
 			const columnIndex = index % numColumns;
-			columns[columnIndex].appendChild(imgElement);
+			columns[columnIndex].appendChild(imgContainer);
+			imgContainer.appendChild(imgElement);
+			imgContainer.appendChild(heartIcon);
 		});
 		header.style.display = "block";
 		Gallery.two();

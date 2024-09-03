@@ -164,7 +164,31 @@ body {
 	right: 1%;
 	width: 24px;
 	height: 24px;
-	background-image: url(./catHeart.jpg);
 	background-size: cover;
-	display: none;
+}
+.container {
+	position: relative;
+	display: inline-block;
+}
+
+.container img {
+	width: 100%;
+	height: auto;
+}
+
+.overlay {
+	position: absolute;
+	top: 10px; /* Adjust as needed */
+	right: 10px; /* Adjust as needed */
+	width: 50px; /* Adjust size as needed */
+	height: 50px; /* Adjust size as needed */
+	background: url("./catHeart.png") no-repeat center center;
+	background-size: contain;
+	cursor: pointer;
+	opacity: 0;
+	transition: 0.3s ease;
+	background-color: palevioletred;
+}
+.container:hover .overlay {
+	opacity: 1;
 }
